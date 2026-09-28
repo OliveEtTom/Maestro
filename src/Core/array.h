@@ -7,11 +7,12 @@
 
 template <class T>
 class Array {
-    T* m_rawArray;
     size_t m_size;
+    T* m_rawArray;
 public:
     
-    Array(size_t size = 10) : m_size(size), m_rawArray( new T[m_size] ) {
+    Array(size_t size = 10) : m_size(size), m_rawArray(new T[m_size]) {
+        
     }
     
     Array(const Array<T>& original) {

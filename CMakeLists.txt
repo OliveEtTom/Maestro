@@ -25,4 +25,4 @@ add_executable(CoreTests test/Core/ArrayTest.cpp)
 target_link_libraries(CoreTests PRIVATE Core)
 target_include_directories(CoreTests PRIVATE "src/Core")
 
-add_test(NAME CoreTests COMMAND CoreTests)
+add_test(NAME CoreTests COMMAND CoreTests --log_level=all)
