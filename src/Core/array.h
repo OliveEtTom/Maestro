@@ -7,12 +7,16 @@
 
 template <class T>
 class Array {
+private:
     size_t m_size;
+    size_t m_allocated;
     T* m_rawArray;
+    static constexpr float OFFSET = 1.5;
 public:
     
-    Array(size_t size = 10) : m_size(size), m_rawArray(new T[m_size]) {
-        
+    Array(size_t size = 10) : m_size(size), m_rawArray(nullptr) {
+        m_allocated = std::round(m_size * OFFSET);
+        if (m_allocated > 0) m_rawArray = new T[m_allocated];
     }
     
     Array(const Array<T>& original) {
@@ -28,7 +32,7 @@ public:
         return this->m_size;
     }
 
-    Array<T> & operator=( const Array<T> & original ) {
+    Array<T> & operator=(const Array<T>& original) {
         if ( this->m_rawArray != nullptr ) delete [] this->m_rawArray;
         this->size = original.size;
         this->m_rawArray = new T[this->m_size];
@@ -39,13 +43,30 @@ public:
         return *this;
     }
 
-    T & operator[]( size_t position ) const {
-        if ( position >= this->m_size ) {
+    T & operator[](size_t position) const {
+        if (position >= this->m_size) {
             std::stringstream buffer;
             buffer << "Bad position " << position;
             throw std::out_of_range( buffer.str() ); 
         }
         return this->m_rawArray[ position ];
+    }
+
+    void append(const Array<T>& other) {
+        if (other.m_size == 0 || other.m_rawArray == nullptr) return;
+        size_t newSize = m_size + other.m_size;
+        if (m_allocated < newSize) {
+            m_allocated = std::round(newSize * OFFSET);
+            T* rawArray = new T[m_allocated];
+            memcpy(rawArray, m_rawArray, m_size * sizeof(T));
+            memcpy(rawArray + m_size, other.m_rawArray, other.m_size * sizeof(T));
+            delete m_rawArray;
+            m_rawArray = rawArray;
+        }
+        else {
+            memcpy(m_rawArray + m_size, other.m_rawArray, other.m_size * sizeof(T));
+        }
+        m_size = newSize;
     }
 };
 
