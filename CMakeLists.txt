@@ -21,7 +21,10 @@ target_link_libraries(Client PRIVATE Boost::system)
 target_include_directories(Client PRIVATE ${Boost_INCLUDE_DIRS})
 
 add_subdirectory(src/Core)
-add_executable(CoreTests test/Core/ArrayTest.cpp)
+add_executable(CoreTests 
+    test/Core/Main.cpp 
+    test/Core/ArrayTest.cpp 
+    test/Core/Latin1StringTest.cpp)
 target_link_libraries(CoreTests PRIVATE Core)
 target_include_directories(CoreTests PRIVATE "src/Core")
 

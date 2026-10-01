@@ -1,7 +1,8 @@
-#define BOOST_TEST_MODULE ArrayTest
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <chrono>
-#include "array.h"
+#include "Array.h"
+
+BOOST_AUTO_TEST_SUITE(ArrayTest)
 
 BOOST_AUTO_TEST_CASE(test_size)
 {
@@ -30,3 +31,5 @@ BOOST_AUTO_TEST_CASE(test_append)
     BOOST_CHECK(elapsed < 100);
     BOOST_CHECK_EQUAL(array1.size(), 5 + nb * array2.size());
 }
+
+BOOST_AUTO_TEST_SUITE_END()

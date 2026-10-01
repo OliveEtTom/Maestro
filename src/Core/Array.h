@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <cmath>
+#include <string.h>
 
 template <class T>
 class Array {
@@ -19,9 +21,22 @@ public:
         if (m_allocated > 0) m_rawArray = new T[m_allocated];
     }
     
-    Array(const Array<T>& original) {
-        this->m_rawArray = nullptr;
-        *this = original;
+    Array(const Array<T>& other) {
+        m_size = other.m_size;
+        m_allocated = other.m_allocated;
+        if (m_allocated > 0) {
+            m_rawArray = new T[m_allocated];
+            memcpy(m_rawArray, other.m_rawArray, m_size * sizeof(T));
+        }
+    }
+
+    Array(const T* rawArray, size_t size) {
+        m_size = size;
+        m_allocated = std::round(m_size * OFFSET);
+        if (m_allocated > 0) {
+            m_rawArray = new T[m_allocated];
+            memcpy(m_rawArray, rawArray, m_size * sizeof(T));
+        }
     }
 
     ~Array() {
