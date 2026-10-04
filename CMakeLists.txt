@@ -28,4 +28,4 @@ add_executable(CoreTests
 target_link_libraries(CoreTests PRIVATE Core)
 target_include_directories(CoreTests PRIVATE "src/Core")
 
-add_test(NAME CoreTests COMMAND CoreTests --log_level=all)
+add_test(NAME CoreTests COMMAND CoreTests --show_progress=yes)

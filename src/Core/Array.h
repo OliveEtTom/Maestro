@@ -83,6 +83,8 @@ public:
         }
         m_size = newSize;
     }
+
+    T* data() const { return m_rawArray; }
 };
 
 template <class T>
