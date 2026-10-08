@@ -9,4 +9,7 @@ public:
     void toUpper();
     void toLower();
     Latin1String subString(size_t pos, size_t len) const;
+    void replace(const Latin1String& pattern, const Latin1String& replacement);
+    bool operator==(const Latin1String& other) const;
 };
+std::ostream & operator<<(std::ostream& os, const Latin1String& string);
