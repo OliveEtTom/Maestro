@@ -16,7 +16,7 @@ private:
     static constexpr float OFFSET = 1.5;
 public:
     
-    Array(size_t size = 10) : m_size(size), m_rawArray(nullptr) {
+    Array(size_t size = 0) : m_size(size), m_rawArray(nullptr) {
         m_allocated = std::round((m_size + 1) * OFFSET);
         if (m_allocated > 0) {
             m_rawArray = new T[m_allocated];
@@ -85,6 +85,22 @@ public:
         }
         else {
             memcpy(m_rawArray + m_size, other.m_rawArray, other.m_size * sizeof(T));
+        }
+        m_size = newSize;
+    }
+
+    void append(const T& value) {
+        size_t newSize = m_size + 1;
+        if (m_allocated < newSize) {
+            m_allocated = std::round(newSize * OFFSET);
+            T* rawArray = new T[m_allocated];
+            memcpy(rawArray, m_rawArray, m_size * sizeof(T));
+            rawArray[m_size] = value;
+            if (m_rawArray) delete m_rawArray;
+            m_rawArray = rawArray;
+        }
+        else {
+            m_rawArray[m_size] = value;
         }
         m_size = newSize;
     }
