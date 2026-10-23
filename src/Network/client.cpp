@@ -1,47 +1,23 @@
 #include <boost/asio.hpp>
 #include <iostream>
 #include <string>
+#include "TcpClient.h"
 
 using namespace boost;
-using asio::ip::tcp;
+using tcp = boost::asio::ip::tcp;
 
 asio::awaitable<void> client()
 {
     auto executor = co_await asio::this_coro::executor;
-
     tcp::socket socket(executor);
-
-    tcp::resolver resolver(executor);
-
-    auto endpoints =
-        co_await resolver.async_resolve(
-            "127.0.0.1",
-            "12345",
-            asio::use_awaitable);
-
-    co_await asio::async_connect(
-        socket,
-        endpoints,
-        asio::use_awaitable);
-
+    TcpClient client(std::move(socket));
+    co_await client.connect(IpAddress("127.0.0.1", 12345));
     std::cout << "Connected\n";
-
     std::string message = "Hello server!";
-
-    co_await asio::async_write(
-        socket,
-        asio::buffer(message),
-        asio::use_awaitable);
-
-    char buffer[1024];
-
-    std::size_t n =
-        co_await socket.async_read_some(
-            asio::buffer(buffer),
-            asio::use_awaitable);
-
+    co_await client.send(message);
+    std::string received = co_await client.receive();
     std::cout << "Server replied: "
-              << std::string(buffer, n)
+              << received
               << '\n';
 }
 
