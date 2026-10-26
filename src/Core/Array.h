@@ -10,9 +10,9 @@
 template <class T>
 class Array {
 private:
-    size_t m_size;
-    size_t m_allocated;
-    T* m_rawArray;
+    size_t m_size = 0;
+    size_t m_allocated = 0;
+    T* m_rawArray = nullptr;
     static constexpr float OFFSET = 1.5;
 public:
     
@@ -45,11 +45,21 @@ public:
     }
 
     ~Array() {
-        delete [] this->m_rawArray;
+        delete [] m_rawArray;
     }
 
     size_t size() const {
-        return this->m_size;
+        return m_size;
+    }
+
+    void clear() {
+        delete [] m_rawArray;
+        m_rawArray = nullptr;
+        m_size = 0;
+        m_allocated = std::round((m_size + 1) * OFFSET);
+        if (m_allocated > 0) {
+            m_rawArray = new T[m_allocated];
+        }
     }
 
     Array<T> & operator=(const Array<T>& other) {
@@ -96,7 +106,7 @@ public:
             T* rawArray = new T[m_allocated];
             memcpy(rawArray, m_rawArray, m_size * sizeof(T));
             rawArray[m_size] = value;
-            if (m_rawArray) delete m_rawArray;
+            if (m_rawArray) delete [] m_rawArray;
             m_rawArray = rawArray;
         }
         else {

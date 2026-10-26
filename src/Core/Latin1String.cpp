@@ -1,10 +1,17 @@
 #include "Latin1String.h"
 #include <string.h>
 
+Latin1String::Latin1String() : Array<char>(0) {
+}
+
 Latin1String::Latin1String(const char* data) : Array<char>(data, strlen(data)) {
 }
 
 Latin1String::Latin1String(const char* data, size_t len) : Array<char>(data, len) {
+}
+
+Latin1String::Latin1String(const Latin1String& other) : Array<char>(other) {
+
 }
 
 void Latin1String::toUpper() {
@@ -51,6 +58,12 @@ bool Latin1String::operator==(const Latin1String& other) const
         if((*this)[iChar] != other[iChar]) return false;
     }
     return true;
+}
+
+Latin1String& Latin1String::operator=(const Latin1String& other) {
+    this->clear();
+    this->append(other);
+    return *this;
 }
 
 std::ostream & operator<<(std::ostream& os, const Latin1String& string)

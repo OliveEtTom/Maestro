@@ -6,6 +6,13 @@ template <class T>
 class LinkedList {
 private: 
     struct Node {
+        Node() {
+
+        }
+        Node(Node& other) {
+            m_data = other.m_data;
+            m_next = nullptr;
+        }
         std::shared_ptr<Node> m_next = nullptr;
         T m_data;
     };
@@ -72,6 +79,14 @@ public:
             next = curr->m_next;
         }
         return Iterator(next);
+    }
+    LinkedList<T> & operator=(const LinkedList<T>& other) {
+        if (!other.m_head) m_head = nullptr;
+        else {
+            m_head = std::make_shared<Node>();
+            m_head->m_data = other.m_head->m_data;
+        }
+        return *this;
     }
 private:
     std::shared_ptr<Node> m_head = nullptr;

@@ -13,7 +13,8 @@ find_package(Boost REQUIRED COMPONENTS system)
 add_executable(CoreTests Main.cpp 
     ArrayTest.cpp 
     LinkedListTest.cpp
-    Latin1StringTest.cpp)
+    Latin1StringTest.cpp
+    HashMapTest.cpp)
 target_link_libraries(CoreTests PRIVATE Core)
 target_include_directories(CoreTests PRIVATE "src/Core")
 
