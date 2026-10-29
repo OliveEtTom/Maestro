@@ -32,4 +32,31 @@ BOOST_AUTO_TEST_CASE(test_append)
     BOOST_CHECK_EQUAL(array1.size(), 5 + nb * array2.size());
 }
 
+BOOST_AUTO_TEST_CASE(test_resize)
+{
+    // GIVEN an array of size 5
+    Array<int> array(5);
+    array[2] = 6;
+
+    // WHEN I set the size to 10
+    array.resize(10);
+
+    // THEN I check that the size is 10
+    BOOST_CHECK_EQUAL(array.size(), 10);
+    BOOST_CHECK_EQUAL(array[2], 6);
+
+    // AND WHEN I set the size to 4
+    array.resize(4);
+
+    // THEN I check that the size is 4
+    BOOST_CHECK_EQUAL(array.size(), 4);
+    BOOST_CHECK_EQUAL(array[2], 6);
+
+    // AND WHEN I set the size to 0
+    array.resize(0);
+
+    // THEN I check that the size is 0
+    BOOST_CHECK_EQUAL(array.size(), 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

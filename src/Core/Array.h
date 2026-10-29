@@ -20,7 +20,7 @@ public:
         m_allocated = std::round((m_size + 1) * OFFSET);
         if (m_allocated > 0) {
             m_rawArray = new T[m_allocated];
-            memset(m_rawArray, 0, m_size * sizeof(T));
+            fill(0, m_size);
         }
     }
     
@@ -52,6 +52,10 @@ public:
         return m_size;
     }
 
+    size_t allocated() const {
+        return m_allocated;
+    }
+
     void clear() {
         delete [] m_rawArray;
         m_rawArray = nullptr;
@@ -62,24 +66,19 @@ public:
         }
     }
 
-    Array<T> & operator=(const Array<T>& other) {
+    Array<T>& operator=(const Array<T>& other) {
         m_size = other.m_size;
         m_allocated = std::round(m_size * OFFSET);
         if (m_allocated > 0) {
             if (m_rawArray != nullptr ) delete [] this->m_rawArray;
             m_rawArray = new T[m_allocated];
-            memcpy(m_rawArray, other.m_rawArray, m_size * sizeof(T));
+            for (size_t index = 0; index < m_size; index++) m_rawArray[index] = other.m_rawArray[index];
         }
         return *this;
     }
 
-    T & operator[](size_t position) const {
-        if (position >= this->m_size) {
-            std::stringstream buffer;
-            buffer << "Bad position " << position;
-            throw std::out_of_range( buffer.str() ); 
-        }
-        return this->m_rawArray[ position ];
+    T & operator[](size_t index) const {
+        return m_rawArray[index];
     }
 
     void append(const Array<T>& other) {
@@ -104,7 +103,7 @@ public:
         if (m_allocated < newSize) {
             m_allocated = std::round(newSize * OFFSET);
             T* rawArray = new T[m_allocated];
-            memcpy(rawArray, m_rawArray, m_size * sizeof(T));
+            for (size_t index = 0; index < m_size; index++) rawArray[index] = m_rawArray[index];
             rawArray[m_size] = value;
             if (m_rawArray) delete [] m_rawArray;
             m_rawArray = rawArray;
@@ -116,6 +115,38 @@ public:
     }
 
     T* data() const { return m_rawArray; }
+
+    void resize(size_t newSize) {
+        m_allocated = std::round((newSize + 1) * OFFSET);
+        if (newSize == 0) {
+            m_size = newSize;
+            if (m_rawArray) delete [] m_rawArray;
+            m_rawArray = nullptr;
+        }
+        else {
+            T* rawArray = new T[m_allocated];
+            if (newSize > m_size) {
+                for (size_t i = 0; i < m_size; i++) {
+                    rawArray[i] = m_rawArray[i];
+                }
+            }
+            else {
+                for (size_t i = 0; i < newSize; i++) {
+                    rawArray[i] = m_rawArray[i];
+                }
+            }
+            if (m_rawArray) delete [] m_rawArray;
+            m_rawArray = rawArray;
+            if (newSize > m_size) fill(m_size, newSize);
+            m_size = newSize;
+        }
+    }
+private:
+    void fill(size_t start, size_t end) {
+        for (size_t i = start; i < end; i++) {
+            m_rawArray[i] = T();
+        }
+    }
 };
 
 template <class T>
