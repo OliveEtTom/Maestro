@@ -66,6 +66,14 @@ Latin1String& Latin1String::operator=(const Latin1String& other) {
     return *this;
 }
 
+bool Latin1String::operator<(const Latin1String& other) const {
+    size_t minSize = std::min(size(), other.size());
+    for (size_t iChar = 0; iChar < minSize; iChar++) {
+        if((*this)[iChar] > other[iChar]) return false;
+    }
+    return minSize == size();
+}
+
 std::ostream & operator<<(std::ostream& os, const Latin1String& string)
 {
     os << string.data();
