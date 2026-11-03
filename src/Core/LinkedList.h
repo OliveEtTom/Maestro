@@ -67,6 +67,28 @@ public:
             m_head = newHead;
         }
     }
+    bool remove(const T& value) {
+        std::shared_ptr<Node> curr = m_head;
+        std::shared_ptr<Node> next = m_head ? m_head->m_next : nullptr;
+        while (curr) {
+            if (curr->m_data == value) {
+                curr->m_next = next->m_next;
+                return true;
+            }
+            curr = next;
+            if (next) next = next->m_next;
+        } 
+        return false;
+    }
+    size_t size() const {
+        size_t res = 0;
+        std::shared_ptr<Node> curr = m_head;
+        while (curr) {
+            res++;
+            curr = curr->m_next;
+        }
+        return res;
+    }
     Iterator begin() {
         return Iterator(m_head);
     }

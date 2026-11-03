@@ -2,6 +2,7 @@
 #include <chrono>
 #include "LinkedList.h"
 #include "Array.h"
+#include "Latin1String.h"
 
 BOOST_AUTO_TEST_SUITE(LinkedListTest)
 
@@ -13,6 +14,57 @@ BOOST_AUTO_TEST_CASE(test_isEmpty)
     BOOST_CHECK_EQUAL(list.isEmpty(), false);
     list.prepend(6);
     BOOST_CHECK_EQUAL(list.isEmpty(), false);
+}
+
+BOOST_AUTO_TEST_CASE(test_remove)
+{
+    // SCENARIO : the one where the item is NOT the first
+    {
+        // GIVEN a list with two items
+        LinkedList<Latin1String> list;
+        list.append("bananas");
+        list.append("apples");
+        list.append("oranges");
+
+        // WHEN removing an existing item that is not the first
+        bool ok = list.remove("apples");
+
+        // THEN checking that the removal succeeded
+        BOOST_CHECK_EQUAL(ok, true);
+        BOOST_CHECK_EQUAL(2, list.size());
+    }
+
+    // SCENARIO : the one where the item is the first
+    {
+        // GIVEN a list with two items
+        LinkedList<Latin1String> list;
+        list.append("bananas");
+        list.append("apples");
+        list.append("oranges");
+
+        // WHEN removing an existing item that is not the first
+        bool ok = list.remove("bananas");
+
+        // THEN checking that the removal succeeded
+        BOOST_CHECK_EQUAL(ok, true);
+        BOOST_CHECK_EQUAL(2, list.size());
+    }
+
+    // SCENARIO : the one where the item is NOT in the list
+    {
+        // GIVEN a list with two items
+        LinkedList<Latin1String> list;
+        list.append("bananas");
+        list.append("apples");
+        list.append("oranges");
+        
+        // WHEN removing an unexisting item
+        bool ok = list.remove("not found");
+
+        // THEN checking that the removal failed
+        BOOST_CHECK_EQUAL(ok, false);
+        BOOST_CHECK_EQUAL(3, list.size());
+    }
 }
 
 BOOST_AUTO_TEST_CASE(test_iterator)
