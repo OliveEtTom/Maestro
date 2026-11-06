@@ -32,6 +32,10 @@ BOOST_AUTO_TEST_CASE(test_remove)
         // THEN checking that the removal succeeded
         BOOST_CHECK_EQUAL(ok, true);
         BOOST_CHECK_EQUAL(2, list.size());
+        auto it = list.begin();
+        BOOST_CHECK_EQUAL(it.value(), "bananas");
+        it++;
+        BOOST_CHECK_EQUAL(it.value(), "oranges");
     }
 
     // SCENARIO : the one where the item is the first

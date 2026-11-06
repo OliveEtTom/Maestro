@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-
+#include <iostream>
 
 template <class T>
 class LinkedList {
@@ -68,17 +68,21 @@ public:
         }
     }
     bool remove(const T& value) {
+        std::shared_ptr<Node> prev = nullptr;
         std::shared_ptr<Node> curr = m_head;
-        std::shared_ptr<Node> next = m_head ? m_head->m_next : nullptr;
+        bool found = false;
         while (curr) {
             if (curr->m_data == value) {
-                curr->m_next = next->m_next;
-                return true;
+                if (prev) {
+                    prev->m_next = curr->m_next;
+                }
+                else if (curr == m_head) m_head = curr->m_next; 
+                found = true;
             }
-            curr = next;
-            if (next) next = next->m_next;
+            prev = curr;
+            curr = curr->m_next;
         } 
-        return false;
+        return found;
     }
     size_t size() const {
         size_t res = 0;

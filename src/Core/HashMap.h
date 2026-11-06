@@ -27,6 +27,10 @@ private:
             return *this;
         }
 
+        bool operator==(const Pair& other) {
+            return m_key == other.m_key;
+        }
+
         K m_key;
         V m_value;
     };
@@ -41,6 +45,19 @@ public:
         LinkedList<Pair>& values = m_array[index];
         Pair pair(key, value);
         values.append(pair);
+    }
+
+    bool remove(const K& key) {
+        size_t hash = hashCode(key);
+        size_t index = hash % m_array.size();
+        LinkedList<Pair>& list = m_array[index];
+        for (auto it = list.begin(); it != list.end(); it++) {
+            Pair pair = it.value();
+            if (pair.m_key == key) {
+                return list.remove(pair);
+            }
+        }
+        return false;
     }
 
     V value(const K& key, const V& defaultValue = V()) const {

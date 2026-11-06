@@ -15,9 +15,9 @@ public:
         size_t res = 0;
         size_t size = value.size();
         for (size_t iChar = 0; iChar < size; iChar++) {
-            res += static_cast<size_t>(value[iChar]);
+            size_t weight = static_cast<size_t>(pow(128, size - iChar - 1));
+            res += static_cast<size_t>(value[iChar]) * weight;
         }
-        res *= size;
         return res;
     }
 };
