@@ -20,4 +20,22 @@ BOOST_AUTO_TEST_CASE(test_insert)
     BOOST_CHECK_EQUAL(map.value("oranges"), 6);
 }
 
+BOOST_AUTO_TEST_CASE(test_remove)
+{
+    // GIVEN a hashMap with 3 items
+    Map<Latin1String, int> map;
+    map.insert(Latin1String("bananas"), 5);
+    map.insert(Latin1String("apples"), 10);
+    map.insert(Latin1String("oranges"), 6);
+
+    // WHEN I remove the second item
+    bool ok = map.remove("apples");
+
+    // THEN I check that the item was removed
+    BOOST_CHECK_EQUAL(ok, true);
+    BOOST_CHECK_EQUAL(map.value("bananas"), 5);
+    BOOST_CHECK_EQUAL(map.value("apples"), 0);
+    BOOST_CHECK_EQUAL(map.value("oranges"), 6);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -16,15 +16,35 @@ private:
 public:
     void insert(const K& key, const V& value) {
         if (!m_root) {
-            m_root = std::make_unique<MapNode>(key, value);
+            m_root = std::make_shared<MapNode>(key, value);
             return;
         }
         insert(m_root, key, value);
     }
 
+    bool remove(const K& key) {
+        std::shared_ptr<MapNode> parentNode = nullptr;
+        std::shared_ptr<MapNode> node = findNode(m_root, key, &parentNode);
+        if (!node || !parentNode) return false;
+        std::shared_ptr<MapNode> left = node->m_left;
+        std::shared_ptr<MapNode> right = node->m_right;
+        bool isLeftChild = node == parentNode->m_left;
+        if (isLeftChild) {
+            parentNode->m_left = left;
+            left->m_right = right;
+        }
+        else {
+            parentNode->m_right = right;
+            right->m_left = left;
+        }
+        return true;
+    }
+
     V value(const K& key, const V& defaultValue = V()) const {
-        if (!m_root) return defaultValue;
-        return find(m_root, key, defaultValue);
+        std::shared_ptr<MapNode> parentNode = nullptr;
+        std::shared_ptr<MapNode> node = findNode(m_root, key, &parentNode);
+        if (!node) return defaultValue;
+        return node->m_value;
     }
 private:
     void insert(std::shared_ptr<MapNode> node, const K& key, const V& value) {
@@ -38,11 +58,16 @@ private:
             else insert(node->m_right, key, value);
         }
     }
-    V find(std::shared_ptr<MapNode> node, const K& key, const V& defaultValue) const {
-        if (node == nullptr) return defaultValue;
-        if (node->m_key == key) return node->m_value;
-        else if (key < node->m_key) return find(node->m_left, key, defaultValue);
-        return find(node->m_right, key, defaultValue);
+
+    std::shared_ptr<MapNode> findNode(std::shared_ptr<MapNode> node, const K& key, std::shared_ptr<MapNode>* parent) const {
+        if (node == nullptr) return nullptr;
+        if (node->m_key == key) return node;
+        else {
+            if(parent) *parent = node;
+            if (key < node->m_key) return findNode(node->m_left, key, parent);
+            return findNode(node->m_right, key, parent);
+        }
     }
+
     std::shared_ptr<MapNode> m_root = nullptr;
 };
