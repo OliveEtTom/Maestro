@@ -15,7 +15,7 @@ add_executable(CoreTests Main.cpp
     LinkedListTest.cpp
     Latin1StringTest.cpp
     HashMapTest.cpp MapTest.cpp
-    QueueTest.cpp)
+    QueueTest.cpp ConcurrentQueueTest.cpp)
 target_link_libraries(CoreTests PRIVATE Core)
 target_include_directories(CoreTests PRIVATE "src/Core")
 
