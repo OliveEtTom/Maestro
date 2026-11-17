@@ -22,3 +22,15 @@ void EventLoop::discardEvents() {
         m_events.pop();
     }
 }
+
+void EventLoop::start() {
+    m_isRunning = true;
+    while (m_isRunning) {
+        processEvents();
+    }
+}
+
+void EventLoop::stop() {
+    m_isRunning = false;
+    discardEvents();
+}

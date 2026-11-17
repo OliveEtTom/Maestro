@@ -9,7 +9,10 @@ public:
     void addEventListener(std::shared_ptr<IEventListener> eventListener);
     void processEvents();
     void discardEvents();
+    void start();
+    void stop();
 private:
     ConcurrentQueue<std::shared_ptr<Event>> m_events;
     LinkedList<std::shared_ptr<IEventListener>> m_listeners;
+    bool m_isRunning = false;
 };

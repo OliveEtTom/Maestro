@@ -2,6 +2,7 @@
 class Event {
 public:
     enum Type {
+        MessageReceived,
         User = 256
     };
     virtual ~Event() = default;

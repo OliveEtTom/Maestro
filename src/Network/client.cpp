@@ -2,11 +2,14 @@
 #include <iostream>
 #include <string>
 #include "TcpClient.h"
+#include "EventLoop.h"
+#include "TcpEventListener.h"
+#include "TcpMessageReceivedEvent.h"
 
 using namespace boost;
 using tcp = boost::asio::ip::tcp;
 
-asio::awaitable<void> client()
+asio::awaitable<void> client(EventLoop& eventLoop)
 {
     auto executor = co_await asio::this_coro::executor;
     tcp::socket socket(executor);
@@ -16,19 +19,22 @@ asio::awaitable<void> client()
     std::string message = "Hello server!";
     co_await client.send(message);
     std::string received = co_await client.receive();
-    std::cout << "Server replied: "
-              << received
-              << '\n';
+    eventLoop.addEvent(std::make_shared<TcpMessageReceivedEvent>("Server replied: " + received));
+    //eventLoop.stop();
 }
 
 int main()
 {
     asio::io_context io;
+    EventLoop eventLoop;
+    std::shared_ptr<TcpEventListener> tcpEventListener = std::make_shared<TcpEventListener>();
+    eventLoop.addEventListener(tcpEventListener);
 
     asio::co_spawn(
         io,
-        client(),
+        client(eventLoop),
         asio::detached);
 
     io.run();
+    eventLoop.start();
 }
