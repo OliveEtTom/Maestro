@@ -15,5 +15,6 @@ public:
     bool operator==(const Latin1String& other) const;
     Latin1String& operator=(const Latin1String& other);
     bool operator<(const Latin1String& other) const;
+    std::size_t operator()() const;
 };
 std::ostream & operator<<(std::ostream& os, const Latin1String& string);

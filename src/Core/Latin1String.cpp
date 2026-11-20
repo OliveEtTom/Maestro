@@ -74,6 +74,17 @@ bool Latin1String::operator<(const Latin1String& other) const {
     return minSize == size();
 }
 
+std::size_t Latin1String::operator()() const
+{
+    size_t res = 0;
+    size_t size = this->size();
+    for (size_t iChar = 0; iChar < size; iChar++) {
+        size_t weight = static_cast<size_t>(pow(128, size - iChar - 1));
+        res += static_cast<size_t>((*this)[iChar]) * weight;
+    }
+    return res;
+}
+
 std::ostream & operator<<(std::ostream& os, const Latin1String& string)
 {
     os << string.data();

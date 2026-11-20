@@ -1,9 +1,14 @@
 #pragma once
-#include "Hash.h"
 #include "Array.h"
 #include "LinkedList.h"
 #include "Latin1String.h"
-template <class K, class V>
+template<typename T>
+concept Hashable = requires(const T& value)
+{
+    { value() } -> std::same_as<std::size_t>;
+};
+
+template <Hashable K, class V>
 class HashMap {
 private: 
     struct Pair {
@@ -36,7 +41,7 @@ private:
     };
 public:
     void insert(const K& key, const V& value) {
-        size_t hash = hashCode(key);
+        size_t hash = key();
         size_t index = hash % size();
         if (index == size()) {
             resize();
@@ -48,7 +53,7 @@ public:
     }
 
     bool remove(const K& key) {
-        size_t hash = hashCode(key);
+        size_t hash = key();
         size_t index = hash % m_array.size();
         LinkedList<Pair>& list = m_array[index];
         for (auto it = list.begin(); it != list.end(); it++) {
@@ -61,7 +66,7 @@ public:
     }
 
     V value(const K& key, const V& defaultValue = V()) const {
-        size_t hash = hashCode(key);
+        size_t hash = key();
         size_t index = hash % m_array.size();
         LinkedList<Pair>& list = m_array[index];
         for (auto it = list.begin(); it != list.end(); it++) {
@@ -86,16 +91,12 @@ private:
             LinkedList<Pair>& list = m_array[idx];
             for (auto it = list.begin(); it != list.end(); it++) {
                 Pair pair = it.value();
-                size_t hash = hashCode(pair.m_key);
+                size_t hash = pair.m_key();
                 size_t index = hash % newArray.size();
                 newArray[index].append(pair);
             }
         }
         m_array = newArray;
-    }
-    size_t hashCode(const K& key) const {
-        Hash<K> hash;
-        return hash.hashCode(key);
     }
     Array<LinkedList<Pair>> m_array = Array<LinkedList<Pair>>(1);
 };

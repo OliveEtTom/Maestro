@@ -1,6 +1,16 @@
 #pragma once
 #include <memory>
-template <class K, class V>
+#include <concepts>
+
+// 1. Définir un concept personnalisé avec une expression requires
+template <typename T>
+concept Comparable = requires(T a, T b) {
+    { a < b } -> std::convertible_to<bool>;
+    { a == b } -> std::convertible_to<bool>;
+};
+
+
+template <Comparable K, class V>
 class Map {
 private: 
     struct MapNode {
