@@ -9,9 +9,11 @@ set(CMAKE_CXX_FLAGS "-O2 -g -Wall -Wextra -pedantic")
 
 add_subdirectory(src/Network)
 add_subdirectory(src/Core)
+add_subdirectory(src/Data)
 add_subdirectory(src/Events)
 
 enable_testing()
 
 add_subdirectory(test/Core)
+add_subdirectory(test/Data)
 add_subdirectory(test/Events)
